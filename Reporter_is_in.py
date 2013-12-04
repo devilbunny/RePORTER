@@ -1,16 +1,12 @@
 import pandas as pd
 import numpy as np
 from names import split_name
-# years = years for which compiled data are available
-# weeks are for 2012 - 2014 where only week-by-week data are available
-years = range (2008,2013)
-week_years = range(2013,2015)
-week_numbers = range(69,124)
+
 
 #Make data frames from .csvs and does basic trim
-RePORTER_TRIM_path = 'C:\Users\LIlaJeff\Downloads\RePorter\RePORTER_TRIM.csv'
-Residents_path = 'C:\Users\LIlaJeff\Downloads\RePorter\\brig_res.csv'
-Residents_With_Grants_path = "C:\Users\LIlaJeff\Downloads\RePorter\RWG.csv"
+RePORTER_path = 'C:\Users\JAG\RePORTER\Output\RePORT_Append.csv'
+Residents_path = 'C:\Users\JAG\RePORTER\Residencies\mgh.csv'
+Residents_With_Grants_path = "C:\Users\JAG\RePORTER\Residencies\\"
 
 # these are the columns we care about
 Residents = pd.read_csv(Residents_path, index_col=False, names = ['PI_NAMEs', 'Grad_Year', 'Type', 'Current_Title', 'Current_Institution'], squeeze=True, na_values = ["NAN", "Na", " ", ""])
