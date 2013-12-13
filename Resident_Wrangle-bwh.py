@@ -1,13 +1,11 @@
-'''MGH wrangle
-To wrangle complicated files with year of graduation proceeding several names
-Names are of format:
-Last, First Degree(s) (ProgramType)", "New Job, Institution, City, State"
+'''bwh wrangle
+To wrangle files of the format First Last, Grad_year, AP/CP, Title, Institution
 '''
 import pandas as pd
 import numpy as np
 from names import split_name
 
-def addyear (frame, years = (2000,20015), col="Col1"):
+def addyear (frame, years = (2000,2015), col="Col1"):
     '''*DataFrame*, *years=2000-2015* , *column to look at dates = 1*
     takes an input dataframe and adds a 'GRAD_YEAR' column
     then searches down the named column for something that looks year-like,
@@ -78,15 +76,22 @@ def getname (frame, col = 'Col1'):
      frame['Name'] = names
      return frame
 
-Residents_path = 'C:\Users\JAG\RePORTER\Residencies\mgh.csv'
-Fixed_path = 'C:\Users\JAG\RePORTER\Residencies\mgh-fix.csv'
-cols = ["Col1", "Col2"]
+def flip_name(name):
+    ''' takes a string in the format of Firstname Lastname and returns a string of Lastname, Firstname, uses the names function
+    from billy to make a tuple and then rearranges it.'''  
+    first_last = split_name(name)
+    if first_last is not None:
+        firstname, lastname = first_last
+        return lastname + ", " + firstname
+    else:
+        return name
+
+Residents_path = 'C:\Users\JAG\RePORTER\Residencies\\bwh.csv'
+Fixed_path = 'C:\Users\JAG\RePORTER\Residencies\\bwh-fix.csv'
+cols = ['Name','GRAD_YEAR','AP/CP','Title','Employer']
 
 Residents = pd.read_csv(Residents_path, index_col=False, names = cols)
-
-Residents = addyear(Residents, col="Col1")
-Residents = addphd(Residents)
-Residents = ap_or_cp(Residents)
-Residents = getname(Residents)
 Residents = Residents.dropna()
+Flipnames = [flip_name(name) if isinstance(name, basestring) else name for name in Residents['Name']]
+Residents['Name'] = Flipnames
 Residents.to_csv(Fixed_path)

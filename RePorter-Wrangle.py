@@ -7,7 +7,7 @@ import os
 
 
 input_path = 'C:\Users\JAG\RePORTER\\'
-output_path = 'C:\Users\JAG\RePORTER\Output\RePORT_Append.csv'
+output_path = 'C:\Users\JAG\RePORTER\Output\\RePORT_Append.csv'
 
 def unziphere (paths, inputdir = os.getcwd(), target=os.getcwd()):
     '''*[paths]* list of target files, target='\Unzipped\\' unzips a list of files to the target directory'''
@@ -23,18 +23,20 @@ def GetRePORT (path, cols=['APPLICATION_ID', 'ACTIVITY', 'PI_NAMEs', 'ORG_NAME',
     trim_frame = frame[cols]
     return trim_frame
 
-def RePORT_Append (paths, directory = os.getcwd(), target=os.getcwd() + 'RePORTER_Append.csv'):
-    #zips = [path for path in paths if path[-3:] == "zip"]
-    #unziphere(zips, inputdir = directory, target = directory)
+def RePORT_Append (directory = os.getcwd(), target=os.getcwd() + 'RePORTER_Append.csv'):
+    paths = os.listdir(directory)
+    zips = [path for path in paths if path[-3:] == "zip"]
+    unziphere(zips, inputdir = directory, target = directory)
+    paths = os.listdir(directory)
     csvs = [path for path in paths if path[-3:] == "csv"]
     for path in csvs:
         frame = GetRePORT(directory + path)
         frame.to_csv(target, sep = ',' , index = False, mode = 'a')
     return
 
-paths = os.listdir(input_path)
 
-RePORT_Append(paths, directory = input_path, target = output_path)
+
+RePORT_Append(directory = input_path, target = output_path)
 
 '''
 # years = years for which compiled data are available
