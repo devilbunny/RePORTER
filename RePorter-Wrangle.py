@@ -6,7 +6,7 @@ import zipfile
 import os
 
 
-input_path = 'C:\Users\JAG\RePORTER\\'
+input_path = 'C:\Users\JAG\RePORTER\Data\\'
 output_path = 'C:\Users\JAG\RePORTER\Output\\RePORT_Append.csv'
 
 def unziphere (paths, inputdir = os.getcwd(), target=os.getcwd()):
@@ -17,7 +17,7 @@ def unziphere (paths, inputdir = os.getcwd(), target=os.getcwd()):
         z = zipfile.ZipFile(path)
         z.extractall(target)
 
-def GetRePORT (path, cols=['APPLICATION_ID', 'ACTIVITY', 'PI_NAMEs', 'ORG_NAME', 'ORG_CITY', 'BUDGET_START']):
+def GetRePORT (path, cols=['APPLICATION_ID', 'ACTIVITY', 'PI_NAMEs', 'ORG_NAME', 'ORG_CITY', 'BUDGET_START', 'TOTAL_COST']):
     # path of csv to be read, cols = default set of columns, returns dataframe based on *path* with *cols*
     frame = pd.read_csv(path, index_col=False, header=0, squeeze=True)
     trim_frame = frame[cols]

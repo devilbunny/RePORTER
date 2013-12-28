@@ -1,4 +1,4 @@
-#Make data frames from .csvs and does basic trim
+#Make data frames from .csvs and does basic trim, and adds years to grant
 import pandas as pd
 import numpy as np
 import datetime
@@ -36,8 +36,7 @@ def years_to_grant(frame, GRAD_YEAR_col = 'GRAD_YEAR',
     budget start of a grant in months'''
     GRAD_YEAR = []
     BUDGET_START = []
-    YEARS_TO_GRANT = []
-    
+
     for date in frame[GRAD_YEAR_col]:
         date = int(date)
         GRAD_YEAR.append(date)
@@ -66,6 +65,5 @@ simple_names = [simple_name(name).upper() if isinstance(name, basestring) else n
 RePORTER['Simple_names'] = simple_names
 
 Residents_With_Grants = Residents.merge(RePORTER)
-Residents_With_Grants = years_to_grant(Residents_With_Grants, GRAD_YEAR_col = 'Year beginning fellowship')
-Residents_With_Grants = Residents_With_Grants[Residents_With_Grants.Years_to_grant >= 0]
+Residents_With_Grants = years_to_grant(Residents_With_Grants, GRAD_YEAR_col = 'GRAD_YEAR')
 Residents_With_Grants.to_csv(Residents_With_Grants_path, sep = ',' , index = False)

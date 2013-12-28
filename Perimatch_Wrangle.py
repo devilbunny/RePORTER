@@ -109,30 +109,35 @@ def YNTF (frame, col="Col1", newcol = ''):
 
 def fix_specialty (frame, dictionary, col="Specialty", newcol = ''):
     ''' *frame*, *dictionary*, *col* = 'Specialty', *newcol* = '' 
-    - converts a column of yesses and noes
+    - converts a column of specialties variably written to a uniform
+    set by applying a dictionary
     to True and False based on looking for y or n
     If a string is passed as newcol, the T/F will be put 
     into a new column named newcol, if not, it 
     replaces the original'''
-    specialty = []
-    for data in frame[col]:
-        data = str(data)
-        data = data.upper()
-        if data.count('Y') == 1:
-            TF.append(True)
-        elif data.count('N') == 1:
-            TF.append(False)
-        else:
-            TF.append(None)
+    specialties = frame[col]
+    short_spec = []
+    for spec in specialties:
+        sspec = spec[0:4]
+        sspec = sspec.title()
+        short_spec.append(sspec)
+    frame['sspec'] = short_spec
     if newcol == '':
-        frame[col] = TF
+        frame[col] = frame.sspec.map(dictionary)
     else:
-        frame[newcol] = TF
+        frame[newcol] = frame.sspec.map(dictionary)
+    frame = frame.drop('sspec',1)
     return frame
 
 Residents_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch.csv'
 Fixed_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch-fix.csv'
 
+specialties = {'Alle':'Allergy and Immunology', 'Card' : 'Cardiology', 
+'Chie' : 'Chief Resident', 'Endo' : 'Endocrinology', 'Gast' : 'Gastroenterology',
+'Gene' : 'General Medicine', 'Geri' : 'Geriatrician', 'Grou' : 'Private Practice',
+'Hema' : 'Hematology and Oncology', 'Hosp' : 'Hospital Medicine', 
+'Infe' : 'Infectious Disease', 'Neph' : 'Nephrology', 'Onco' : 'Hematology and Oncology',
+'Priv' : 'Private Practice', 'Pulm' : 'Pulmonary and Critical Care', 'Rheu' : 'Rheumatology'}
 
 Residents = pd.read_csv(Residents_path, index_col=False, header=0)
 Residents = Residents.drop('Unnamed: 0' , 1)
@@ -140,4 +145,6 @@ Residents = Residents.drop('ID number',1)
 Residents = dropMD(Residents, col='Name')
 Residents = flip_keep(Residents, col = 'Name')
 Residents = YNTF(Residents, col = 'Traditional fellowship')
+Residents = fix_specialty(Residents, specialties, newcol = 'Fix_Spec')
 Residents.to_csv(Fixed_path)
+
