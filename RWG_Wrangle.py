@@ -7,9 +7,9 @@
 import pandas as pd
 import numpy as np
 
-RWG_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWG.csv"
-RWG_fix_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWG-f.csv"
-Residents_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-fix.csv"
+RWG_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWGb.csv"
+RWG_fix_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWG-fb.csv"
+Residents_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-fixb.csv"
 
 pretypes = ['F30','F31']
 posttypes = ['F32','K01','K08','K12','K23','K24','R01','R03','R15','R21','R43','R56']

@@ -5,7 +5,7 @@ Last, First Degree(s) (ProgramType)", "New Job, Institution, City, State"
 '''
 import pandas as pd
 import numpy as np
-from names import split_name
+#from names import split_name
 
 def addyear (frame, years = (2000,2015), col="Col1"):
     '''*DataFrame*, *years=2000-2015* , *column to look at dates = 1*
@@ -22,7 +22,6 @@ def addyear (frame, years = (2000,2015), col="Col1"):
             GRAD_YEAR.append(None)
         except ValueError:
             GRAD_YEAR.append(year)
-
     frame['GRAD_YEAR'] = GRAD_YEAR
     return frame
 
@@ -35,9 +34,10 @@ def addphd (frame, col="Col1", PhD_col = 'PhD'):
         data = str(data)
         data = data.upper()
         phd = data.count('PHD')
+        md = data.count('MD')
         if phd == 1:
             hasphd.append(True)
-        elif phd == 0:
+        elif phd == 0 and md == 1:
             hasphd.append(False)
         else:
                 hasphd.append(None)
@@ -63,12 +63,13 @@ def dropMD (frame, col = 'Col1'):
 def flip_name(name):
     ''' takes a string in the format of Firstname Lastname and returns a string of Lastname, Firstname, uses the names function
     from billy to make a tuple and then rearranges it.'''  
-    first_last = split_name(name)
-    if first_last is not None:
-        firstname, lastname = first_last
-        return lastname + ", " + firstname
-    else:
-        return name
+    namebits = name.split() 
+    last = namebits[-1]
+    rest = namebits[0:-1]
+    name = last + ','
+    for bit in rest:
+        name = name + ' ' + bit
+    return name
 
 def flip_keep(frame, col = 'Col1'):
     names = []
@@ -130,7 +131,7 @@ def fix_specialty (frame, dictionary, col="Specialty", newcol = ''):
     return frame
 
 Residents_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch.csv'
-Fixed_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch-fix.csv'
+Fixed_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch-fixb.csv'
 
 specialties = {'Alle':'Allergy and Immunology', 'Card' : 'Cardiology', 
 'Chie' : 'Chief Resident', 'Endo' : 'Endocrinology', 'Gast' : 'Gastroenterology',
@@ -142,6 +143,7 @@ specialties = {'Alle':'Allergy and Immunology', 'Card' : 'Cardiology',
 Residents = pd.read_csv(Residents_path, index_col=False, header=0)
 Residents = Residents.drop('Unnamed: 0' , 1)
 Residents = Residents.drop('ID number',1)
+Residents = addphd(Residents, col='Name')
 Residents = dropMD(Residents, col='Name')
 Residents = flip_keep(Residents, col = 'Name')
 Residents = YNTF(Residents, col = 'Traditional fellowship')

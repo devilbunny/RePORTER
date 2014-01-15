@@ -6,8 +6,8 @@ import datetime
 
 
 RePORTER_path = 'C:\Users\JAG\RePORTER\Output\RePORT_Append.csv'
-Residents_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch-fix.csv'
-Residents_With_Grants_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWG.csv"
+Residents_path = 'C:\Users\JAG\RePORTER\Residencies\perimatch-fixb.csv'
+Residents_With_Grants_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWGb.csv"
 
 def flip_name(name):
     ''' takes a string in the format of Firstname Lastname and returns a string of Lastname, Firstname, uses the names function
@@ -24,7 +24,8 @@ def simple_name(name):
     and returns a string of the format Lastname, Fir'''
     names = name.split(",")
     try:
-        return names[0] + ", " + names[1][1:4]
+        newname = names[0] + ", " + names[1][1:4]
+        return newname
     except IndexError:
         return name
 
@@ -35,26 +36,21 @@ def years_to_grant(frame, GRAD_YEAR_col = 'GRAD_YEAR',
     Generates a column showing the time between graduation and the 
     budget start of a grant in months'''
     GRAD_YEAR = []
-    BUDGET_START = []
 
     for date in frame[GRAD_YEAR_col]:
-        date = int(date)
+        date = str(date)
+        date = '7/1/' + date
         GRAD_YEAR.append(date)
     
-    for date in frame[BUDGET_START_col]:
-        try:
-            date = date[-4:]
-            date = int(date)
-        except TypeError:
-            date = None
-        BUDGET_START.append(date)   
-    frame['Temp1'] = GRAD_YEAR
-    frame['Temp2'] = BUDGET_START
-    frame['Years_to_grant'] = frame['Temp2'] - frame['Temp1']
-    frame = frame.drop('Temp1', 1)
-    frame = frame.drop('Temp2', 1)
+    frame['GY_date'] = pd.to_datetime(GRAD_YEAR, coerce = True)
+    frame['BS_date'] = pd.to_datetime(frame[BUDGET_START_col], coerce = True)
 
+    frame['Years_to_grant'] = frame['BS_date'] - frame['GY_date']
+    frame['Years_to_grant'] = [data.astype(float) for data in frame['Years_to_grant']]
+    frame['Years_to_grant'] = frame['Years_to_grant'] / 3.15576e+16
+    
     return frame
+
 
 Residents = pd.read_csv(Residents_path, index_col=False, header=0, squeeze=True)
 RePORTER = pd.read_csv(RePORTER_path, index_col=False, header=0, squeeze=True)

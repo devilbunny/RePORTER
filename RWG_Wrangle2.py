@@ -11,9 +11,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-Residents_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-fix.csv"
-RWG_fix_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWG-f2.csv"
-Residents_plus_grants_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-G.csv"
+Residents_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-fixb.csv"
+RWG_fix_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-RWG-f2b.csv"
+Residents_plus_grants_path = "C:\Users\JAG\RePORTER\Residencies\perimatch-Gb.csv"
 
 Residents = pd.read_csv(Residents_path, sep = ',' , index_col = False, header =0, squeeze = True)
 RWG_fix = pd.read_csv(RWG_fix_path, sep=',' , index_col = False, header =0)
